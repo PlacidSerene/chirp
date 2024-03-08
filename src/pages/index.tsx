@@ -1,6 +1,5 @@
 import Head from "next/head";
-import Link from "next/link";
-import { SignIn, SignInButton, SignOutButton, UserButton } from "@clerk/nextjs";
+import { SignInButton } from "@clerk/nextjs";
 import { RouterOutputs, api } from "~/utils/api";
 import { useUser } from "@clerk/clerk-react";
 import dayjs from "dayjs";
@@ -51,7 +50,7 @@ const PostView = (props: PostWithUser) => {
           <span>{`@${author.username}`}</span>
           <span className="font-thin">{` - ${dayjs(post.createdAt).fromNow()}`}</span>
         </div>
-        <span>{post.content}</span>
+        <span className="text-xl">{post.content}</span>
       </div>
     </div>
   );
