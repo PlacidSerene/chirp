@@ -21,7 +21,7 @@ const CreatePostWizard = () => {
     onSuccess: () => {
       setUserInput("");
       // also update the existing post on screen provided above
-      ctx.post.getAll.invalidate();
+      void ctx.post.getAll.invalidate();
     },
   });
   if (!user) return null;
