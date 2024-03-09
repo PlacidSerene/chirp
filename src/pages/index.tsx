@@ -6,12 +6,24 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Image from "next/image";
 import LoadingPage from "~/components/loading";
+import React from "react";
 
 dayjs.extend(relativeTime);
 
 const CreatePostWizard = () => {
   const { user } = useUser();
+  const [userInput, setUserInput] = React.useState("");
 
+  // easiest way to do that is to grasp the trpc cache
+  const ctx = api.useUtils();
+
+  const { mutate, isLoading: isPosting } = api.post.create.useMutation({
+    onSuccess: () => {
+      setUserInput("");
+      // also update the existing post on screen provided above
+      ctx.post.getAll.invalidate();
+    },
+  });
   if (!user) return null;
 
   return (
@@ -27,7 +39,11 @@ const CreatePostWizard = () => {
         type="text"
         placeholder="Type some emojis!"
         className="grow bg-transparent outline-none"
+        value={userInput}
+        onChange={(e) => setUserInput(e.target.value)}
+        disabled={isPosting}
       />
+      <button onClick={() => mutate({ content: userInput })}>Post</button>
     </div>
   );
 };
