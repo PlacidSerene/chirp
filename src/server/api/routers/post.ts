@@ -83,7 +83,10 @@ export const postRouter = createTRPCRouter({
   create: privateProcedure
     .input(
       z.object({
-        content: z.string().min(1).max(200),
+        content: z
+          .string()
+          .min(1, { message: "At least give it something man" })
+          .max(200),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -92,6 +95,7 @@ export const postRouter = createTRPCRouter({
       const { success } = await ratelimit.limit(authorId);
 
       if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+
       const post = await ctx.db.post.create({
         data: {
           authorId,
